@@ -5,3 +5,7 @@ Demonstration minimal text editor based on PWA technology
 ## Description
 
 TODO - TBD
+
+REMINDER:  
+Again make sure in your client folder you do the following:
+  npm i @babel/plugin-proposal-object-rest-spread
