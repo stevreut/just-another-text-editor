@@ -1,0 +1,31 @@
+CHANGES:
+
+
+
+various package.json files (done?)
+
+
+client/src/js/database.js - many changes - essentially blank in "before" version
+
+
+client/src/js/install.js - differs only in added comments - but worth reviewing - literally boiler-plate - just swap it over
+
+client/src-sw.js - differs considerably - essentially blank before
+
+
+webpack.config.js - differs considerably - (see note below)
+
+server/.gitignore - identical - HOWEVER, makes me wonder if I should add a few things to mine (?).  Also, apparently there are at least two distinct .gitignore files - and presumably three (root, client(?), server)
+
+
+
+
+Per DE : "most" of webpack.config... can be ported (with modfications to be relevant)
+
+
+Put an ID of 1 (not same as boiler plate) database.js
+Get .... 
+
+
+
+OFFICE HOURS! - for DB

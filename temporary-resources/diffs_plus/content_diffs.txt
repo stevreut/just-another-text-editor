@@ -1,0 +1,410 @@
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/.npmrc and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/.npmrc:
+
+   = 00000 00000 production=false
+   = 00001 00001 
+   = 00002 00002 progress=false
+   +       00003 
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/package.json and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/package.json:
+
+   = 00000 00000 {
+   = 00001 00001   "name": "Contact",
+   = 00002 00002   "scripts": {
+   - 00003           "dev": "",
+   - 00004           "build": "",
+   - 00005           "start": ""
+   +       00003     "dev": "webpack-dev-server",
+   +       00004     "build": "webpack --mode production",
+   +       00005     "start": "webpack --watchAll"
+   = 00006 00006   },
+   = 00007 00007   "author": "2U",
+   = 00008 00008   "license": "UNLICENSED",
+   = 00009 00009   "devDependencies": {
+   - 00010           "@babel/plugin-proposal-object-rest-spread": "^7.20.7"
+   +       00010     "@babel/core": "^7.15.0",
+   +       00011     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+   +       00012     "@babel/plugin-transform-runtime": "^7.15.0",
+   +       00013     "@babel/preset-env": "^7.15.0",
+   +       00014     "@babel/runtime": "^7.15.3",
+   +       00015     "babel-loader": "^8.2.2",
+   +       00016     "css-loader": "^6.2.0",
+   +       00017     "html-webpack-plugin": "^5.3.2",
+   +       00018     "http-server": "^0.11.1",
+   +       00019     "style-loader": "^3.2.1",
+   +       00020     "webpack": "^5.51.1",
+   +       00021     "webpack-cli": "^4.8.0",
+   +       00022     "webpack-dev-server": "^4.0.0",
+   +       00023     "webpack-pwa-manifest": "^4.3.0",
+   +       00024     "workbox-webpack-plugin": "^6.2.4"
+   +       00025   },
+   +       00026   "dependencies": {
+   +       00027     "idb": "^6.1.2"
+   = 00011 00028   }
+   = 00012 00029 }
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/src-sw.js and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/src-sw.js:
+
+   - 00000       // TODO: Create a service worker that caches static assets:
+   +       00000 // Caching js and css requires workbox-strategies to be installed
+   +       00001 // To actually respond to requests with a cached response, we need to use a strategy called StaleWhileRevalidate
+   +       00002 // This strategy will first check the cache for a response, and if it finds one, it will return it.
+   +       00003 
+   +       00004 const { StaleWhileRevalidate } = require('workbox-strategies');
+   +       00005 const { registerRoute } = require('workbox-routing');
+   +       00006 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
+   +       00007 const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
+   +       00008 
+   +       00009 // The precacheAndRoute() method takes an array of URLs to precache. The self._WB_MANIFEST is an array that contains the list of URLs to precache.
+   +       00010 precacheAndRoute(self.__WB_MANIFEST);
+   +       00011 
+   +       00012 // Set up asset cache
+   +       00013 registerRoute(
+   +       00014   // Here we define the callback function that will filter the requests we want to cache (in this case, JS and CSS files)
+   +       00015   ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
+   +       00016   new StaleWhileRevalidate({
+   +       00017     // Name of the cache storage.
+   +       00018     cacheName: 'asset-cache',
+   +       00019     plugins: [
+   +       00020       // This plugin will cache responses with these headers to a maximum-age of 30 days
+   +       00021       new CacheableResponsePlugin({
+   +       00022         statuses: [0, 200],
+   +       00023       }),
+   +       00024     ],
+   +       00025   })
+   +       00026 );
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/src/js/cards.js and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/src/js/cards.js:
+
+   = 00000 00000 import { postDb, getDb, deleteDb } from './database';
+   = 00001 00001 
+   = 00002 00002 const form = document.getElementById('contact-form');
+   = 00003 00003 
+   = 00004 00004 // Adds deleteCard() to the global scope so each card has access to it.
+   = 00005 00005 window.deleteCard = (e) => {
+   = 00006 00006 // Grabs the id from the button element attached to the contact card.
+   = 00007 00007   let id = parseInt(e.id);
+   = 00008 00008 
+   = 00009 00009   // Delete the card
+   = 00010 00010   deleteDb(id);
+   = 00011 00011 
+   = 00012 00012   // Reload the DOM
+   = 00013 00013   fetchCards();
+   = 00014 00014 };
+   = 00015 00015 
+   = 00016 00016 form.addEventListener('submit', (event) => {
+   = 00017 00017   // handle the form data
+   = 00018 00018   event.preventDefault();
+   = 00019 00019   const name = form.elements['name'].value;
+   = 00020 00020   const home = form.elements['home-phone'].value;
+   = 00021 00021   const cell = form.elements['cell-phone'].value;
+   = 00022 00022   const email = form.elements['email'].value;
+   - 00023       
+   - 00024       
+   = 00025 00023 
+   = 00026 00024   // Post form data to IndexedDB
+   = 00027 00025   postDb(name, home, cell, email);
+   = 00028 00026 
+   = 00029 00027   // Submit the form
+   = 00030 00028   form.reset();
+   = 00031 00029 
+   = 00032 00030   // Reload the DOM
+   = 00033 00031   fetchCards();
+   = 00034 00032 });
+   = 00035 00033 
+   = 00036 00034 const fetchCards = async () => {
+   = 00037 00035 // Grab card data from IndexedDB
+   = 00038 00036   const result = await getDb();
+   = 00039 00037 
+   = 00040 00038   let card = ` `;
+   = 00041 00039 
+   = 00042 00040   // Loop through the data and create the contact card
+   = 00043 00041   for (let data of result) {
+   = 00044 00042     console.log(data);
+   = 00045 00043     card += `
+   = 00046 00044     <div class="card card-rounded col-md-3 m-2">
+   = 00047 00045       <div class="card-header card-rounded">
+   = 00048 00046         <h1>${data.name}</h1>
+   = 00049 00047       </div>
+   = 00050 00048       <div class="card-body">
+   = 00051 00049         <p>Home Phone: ${data.home_phone}</p>
+   = 00052 00050         <p>Cell Phone: ${data.cell_phone}</p>
+   = 00053 00051         <p>Email: ${data.email}</p>
+   = 00054 00052       </div>
+   = 00055 00053       <div class="flex-row justify-flex-end p-1">
+   = 00056 00054         <button class="btn btn-sm btn-danger" id="${data.id}" onclick="deleteCard(this)">Delete</button>
+   = 00057 00055       </div>
+   = 00058 00056     </div>
+   = 00059 00057     `;
+   = 00060 00058   }
+   = 00061 00059 
+   = 00062 00060   // Setting innerHTML as card variable
+   = 00063 00061   document.getElementById('card-group').innerHTML = card;
+   = 00064 00062 };
+   = 00065 00063 
+   = 00066 00064 // Fetch cards upon being loaded.
+   = 00067 00065 fetchCards();
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/src/js/database.js and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/src/js/database.js:
+
+   - 00000       // TODO: Install the following package:
+   = 00001 00000 import { openDB } from 'idb';
+   = 00002 00001 
+   - 00003       // TODO: Complete the initDb() function below:
+   - 00004       const initdb = async () => {
+   +       00002 const initdb = async () =>
+   +       00003 // We are creating a new database named 'contact' which will be using version 1 of the database.
+   +       00004   openDB('contact', 1, {
+   +       00005     // Add our database schema if it has not already been initialized.
+   +       00006     upgrade(db) {
+   +       00007       if (db.objectStoreNames.contains('contact')) {
+   +       00008         console.log('contact database already exists');
+   +       00009         return;
+   +       00010       }
+   +       00011       // Create a new object store for the data and give it an key name of 'id' which needs to increment automatically.
+   +       00012       db.createObjectStore('contact', { keyPath: 'id', autoIncrement: true });
+   +       00013       console.log('contact database created');
+   +       00014     },
+   +       00015   });
+   = 00005 00016 
+   - 00006       };
+   +       00017 // Export a function we will use to POST to the database.
+   +       00018 export const postDb = async (name, home, cell, email)  => {
+   +       00019   console.log('Post to the database');
+   = 00007 00020 
+   +       00021   // Create a connection to the database database and version we want to use.
+   +       00022   const contactDb = await openDB('contact', 1);
+   = 00008 00023 
+   - 00009       // TODO: Complete the postDb() function below:
+   - 00010       export const postDb = async (name, home, cell, email)  => {
+   - 00011        
+   +       00024   // Create a new transaction and specify the database and data privileges.
+   +       00025   const tx = contactDb.transaction('contact', 'readwrite');
+   +       00026 
+   +       00027   // Open up the desired object store.
+   +       00028   const store = tx.objectStore('contact');
+   +       00029 
+   +       00030   // Use the .add() method on the store and pass in the content.
+   +       00031   const request = store.add({ name: name, home_phone: home, cell_phone: cell, email: email });
+   +       00032 
+   +       00033   // Get confirmation of the request.
+   +       00034   const result = await request;
+   +       00035   console.log('Data saved to the database', result);
+   = 00012 00036 };
+   +       00037 ;
+   = 00013 00038 
+   - 00014       // TODO: Complete the getDb() function below:
+   +       00039 // Export a function we will use to GET to the database.
+   = 00015 00040 export const getDb = async () => {
+   - 00016         
+   +       00041   console.log('GET from the database');
+   +       00042 
+   +       00043   // Create a connection to the database database and version we want to use.
+   +       00044   const contactDb = await openDB('contact', 1);
+   +       00045 
+   +       00046   // Create a new transaction and specify the database and data privileges.
+   +       00047   const tx = contactDb.transaction('contact', 'readonly');
+   +       00048 
+   +       00049   // Open up the desired object store.
+   +       00050   const store = tx.objectStore('contact');
+   +       00051 
+   +       00052   // Use the .getAll() method to get all data in the database.
+   +       00053   const request = store.getAll();
+   +       00054 
+   +       00055   // Get confirmation of the request.
+   +       00056   const result = await request;
+   +       00057   console.log('result.value', result);
+   +       00058   return result;
+   = 00017 00059 };
+   = 00018 00060 
+   - 00019       // TODO: Complete the deleteDb() function below:
+   +       00061 
+   +       00062 // Export a function we will use to DELETE to the database.
+   = 00020 00063 export const deleteDb = async (id) => {
+   - 00021         
+   +       00064   console.log('DELETE from the database', id);
+   +       00065 
+   +       00066   // Create a connection to the database database and version we want to use.
+   +       00067   const contactDb = await openDB('contact', 1);
+   +       00068 
+   +       00069   // Create a new transaction and specify the database and data privileges.
+   +       00070   const tx = contactDb.transaction('contact', 'readwrite');
+   +       00071 
+   +       00072   // Open up the desired object store.
+   +       00073   const store = tx.objectStore('contact');
+   +       00074 
+   +       00075   // Use the .delete() method to get all data in the database.
+   +       00076   const request = store.delete(id);
+   +       00077 
+   +       00078   // Get confirmation of the request.
+   +       00079   const result = await request;
+   +       00080   console.log('result.value', result);
+   +       00081   return result?.value;
+   = 00022 00082 };
+   = 00023 00083 
+   +       00084 // Start the database.
+   = 00024 00085 initdb();
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/src/js/install.js and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/src/js/install.js:
+
+   = 00000 00000 const butInstall = document.getElementById("buttonInstall");
+   = 00001 00001 
+   = 00002 00002 window.addEventListener('beforeinstallprompt', (event) => {
+   +       00003 
+   +       00004     // Store the triggered events
+   = 00003 00005     window.deferredPrompt = event;
+   +       00006 
+   +       00007     // Remove the hidden class from the button.
+   = 00004 00008     butInstall.classList.toggle('hidden', false);
+   = 00005 00009   });
+   = 00006 00010 
+   = 00007 00011 butInstall.addEventListener('click', async () => {
+   = 00008 00012   
+   = 00009 00013   const promptEvent = window.deferredPrompt;
+   = 00010 00014 
+   = 00011 00015   if (!promptEvent) {
+   = 00012 00016    return;
+   = 00013 00017   }
+   = 00014 00018 
+   +       00019   // Show prompt
+   = 00015 00020   promptEvent.prompt();
+   = 00016 00021   
+   +       00022   // Reset the deferred prompt variable, it can only be used once.
+   = 00017 00023   window.deferredPrompt = null;
+   = 00018 00024   
+   = 00019 00025   butInstall.classList.toggle('hidden', true);
+   = 00020 00026 });
+   = 00021 00027 
+   = 00022 00028 window.addEventListener('appinstalled', (event) => {
+   - 00023         
+   +       00029   // Clear prompt
+   = 00024 00030   window.deferredPrompt = null;
+   = 00025 00031 }); 
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/client/webpack.config.js and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/client/webpack.config.js:
+
+   +       00000 const HtmlWebpackPlugin = require('html-webpack-plugin');
+   +       00001 const WebpackPwaManifest = require('webpack-pwa-manifest');
+   = 00000 00002 const path = require('path');
+   +       00003 const { InjectManifest } = require('workbox-webpack-plugin');
+   = 00001 00004 
+   = 00002 00005 module.exports = () => {
+   = 00003 00006   return {
+   = 00004 00007     mode: 'development',
+   +       00008     // Entry point for files
+   = 00005 00009     entry: {
+   = 00006 00010       main: './src/js/index.js',
+   = 00007 00011       install: './src/js/install.js',
+   = 00008 00012       cards: './src/js/cards.js'
+   = 00009 00013     },
+   - 00010       
+   - 00011           // TODO: Add the correct output
+   +       00014     // Output for our bundles
+   = 00012 00015     output: {
+   - 00013             
+   +       00016       filename: '[name].bundle.js',
+   +       00017       path: path.resolve(__dirname, 'dist'),
+   = 00014 00018     },
+   - 00015       
+   - 00016           // TODO: Add the correct plugins
+   = 00017 00019     plugins: [
+   +       00020       // Webpack plugin that generates our html file and injects our bundles. 
+   +       00021       new HtmlWebpackPlugin({
+   +       00022         template: './index.html',
+   +       00023         title: 'Contact Cards'
+   +       00024       }),
+   = 00018 00025      
+   +       00026       // Injects our custom service worker
+   +       00027       new InjectManifest({
+   +       00028         swSrc: './src-sw.js',
+   +       00029         swDest: 'src-sw.js',
+   +       00030       }),
+   +       00031 
+   +       00032       // Creates a manifest.json file.
+   +       00033       new WebpackPwaManifest({
+   +       00034         fingerprints: false,
+   +       00035         inject: true,
+   +       00036         name: 'Contact Cards',
+   +       00037         short_name: 'Contact',
+   +       00038         description: 'Never forget your contacts!',
+   +       00039         background_color: '#225ca3',
+   +       00040         theme_color: '#225ca3',
+   +       00041         start_url: './',
+   +       00042         publicPath: './',
+   +       00043         icons: [
+   +       00044           {
+   +       00045             src: path.resolve('src/images/logo.png'),
+   +       00046             sizes: [96, 128, 192, 256, 384, 512],
+   +       00047             destination: path.join('assets', 'icons'),
+   +       00048           },
+   +       00049         ],
+   +       00050       }),
+   = 00019 00051     ],
+   = 00020 00052 
+   - 00021           // TODO: Add the correct modules
+   = 00022 00053     module: {
+   - 00023       
+   - 00024           }
+   +       00054       // CSS loaders
+   +       00055       rules: [
+   +       00056         {
+   +       00057           test: /\.css$/i,
+   +       00058           use: ['style-loader', 'css-loader'],
+   +       00059         },
+   +       00060         {
+   +       00061           test: /\.m?js$/,
+   +       00062           exclude: /node_modules/,
+   +       00063           // We use babel-loader in order to use ES6.
+   +       00064           use: {
+   +       00065             loader: 'babel-loader',
+   +       00066             options: {
+   +       00067               presets: ['@babel/preset-env'],
+   +       00068               plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
+   +       00069             },
+   +       00070           },
+   +       00071         },
+   +       00072       ],
+   +       00073     },
+   = 00025 00074   };
+   = 00026 00075 };
+
+
+Comparison of /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Develop/package.json and /Users/stephenreuterskiold/Desktop/28-Stu_Mini-Project/Main/package.json:
+
+   = 00000 00000 {
+   - 00001         "name": "mini-project-develop",
+   +       00001   "name": "mini-project-main",
+   = 00002 00002   "version": "1.0.0",
+   = 00003 00003   "description": "",
+   = 00004 00004   "main": "server.js",
+   = 00005 00005   "scripts": {
+   - 00006           "start:dev": "",
+   - 00007           "start": "",
+   - 00008           "server": "",
+   - 00009           "build": "",
+   - 00010           "install": "",
+   - 00011           "client": ""
+   +       00006     "start:dev": "concurrently \"cd server && npm run server\" \"cd client && npm run dev\"",
+   +       00007     "start": "npm run build && cd server && node server.js",
+   +       00008     "server": "cd server nodemon server.js --ignore client",
+   +       00009     "build": "cd client && npm run build",
+   +       00010     "install": "cd server && npm i && cd ../client && npm i",
+   +       00011     "client": "cd client && npm start"
+   = 00012 00012   },
+   = 00013 00013   "keywords": [],
+   = 00014 00014   "author": "",
+   = 00015 00015   "license": "ISC",
+   = 00016 00016   "dependencies": {
+   = 00017 00017     "express": "^4.17.1"
+   = 00018 00018   },
+   = 00019 00019   "devDependencies": {
+   = 00020 00020     "concurrently": "^5.2.0"
+   = 00021 00021   }
+   = 00022 00022 }
