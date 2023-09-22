@@ -20,7 +20,7 @@ server/.gitignore - identical - HOWEVER, makes me wonder if I should add a few t
 
 
 
-Per DE : "most" of webpack.config... can be ported (with modfications to be relevant)
+Per DE : "most" of webpack.config... can be ported (with modifications to be relevant)
 
 
 Put an ID of 1 (not same as boiler plate) database.js
