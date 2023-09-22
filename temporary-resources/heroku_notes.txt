@@ -1,0 +1,43 @@
+HEROKU NOTES
+
+
+9/6 2:55
+
+for anyone who will need to run seeds on  your deployed site the command is as follows
+heroku run npm run seed 
+
+
+9/5 2:16
+
+for anyone having heroku logs issues when using the mini project as starter code, its most likely because you need to set up your env locally and then go on heroku and set up jaws db and your environmental variables
+
+
+
+
+8/23 
+
+first do a git init, git add ., and git commit
+
+then
+
+heroku login
+heroku create
+git push heroku main 
+
+
+8/23
+
+https://devcenter.heroku.com/articles/heroku-cli 
+
+devcenter.heroku.com 
+The Heroku CLI | Heroku Dev Center
+
+
+8/22
+
+https://coding-boot-camp.github.io/full-stack/heroku/how-to-install-the-heroku-cli#connect-your-heroku-account-to-github
+
+coding-boot-camp.github.io
+How to Install the Heroku CLI
+
+
