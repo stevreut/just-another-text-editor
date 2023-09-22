@@ -55,11 +55,11 @@ module.exports = () => {
     module: {
       rules: [
         {
-          test: /\.css$/i,
+          test: /\.css$/i,  // regex for any filename ending in ".css", "/i" indicates case-insensitive
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.m?js$/,
+          test: /\.m?js$/,  // regex for filenames (case-SENsitive) ending in either ".js" or ".mjs" (i.e. Javascript)
           exclude: /node_modules/,
           // We use babel-loader in order to use ES6.
           use: {
