@@ -1,2 +1,0 @@
-Again make sure in your CLIENT folder you do the following:
-npm i @babel/plugin-proposal-object-rest-spread
