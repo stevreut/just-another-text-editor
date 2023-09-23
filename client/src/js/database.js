@@ -23,7 +23,7 @@ export const putDb = async (content) => {
     const store = tx.objectStore('jate');  // TODO - This jate is store?  (maybe make them different later?)
     const request = store.put({ id: 1, content: content });  // TODO - we just always use 1
     const result = await request;
-    console.log('data saved = "', request, '"');
+    console.log('data saved = "', result, '"');
     console.log('ending idb put');
   } catch (err) {
     console.log('err on db put = ', err.message);
